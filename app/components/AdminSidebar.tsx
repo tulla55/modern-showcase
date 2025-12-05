@@ -3,6 +3,7 @@
 import { usePathname, useRouter } from "next/navigation";
 import Link from "next/link";
 import { useState } from "react";
+import { useModal } from "./ModalProvider";
 import {
     Building2,
     Megaphone,
@@ -18,32 +19,24 @@ import {
 
 const adminLinks = [
     { name: "companies", href: "/admin/companies", addHref: "/admin/companies/create", icon: Building2 },
-    { name: "campaigns", href: "/admin/campaigns", addHref: "/admin/campaigns/create", icon: Megaphone }, // DEFAULT
+    { name: "campaigns", href: "/admin/campaigns", addHref: "/admin/campaigns/create", icon: Megaphone },
     { name: "banners", href: "/admin/banners", addHref: "/admin/banners/create", icon: ImageIcon },
     { name: "adformats", href: "/admin/adformats", addHref: "/admin/adformats/create", icon: LayoutGrid },
     { name: "industries", href: "/admin/industries", addHref: "/admin/industries/create", icon: Factory },
     { name: "effects", href: "/admin/effects", addHref: "/admin/effects/create", icon: Sparkles },
 ];
 
-
 export default function AdminSidebar() {
     const pathname = usePathname();
     const router = useRouter();
+    const { openModal } = useModal();
     const [openLogout, setOpenLogout] = useState(false);
-
-    // ✅ Detect active section for dynamic ADD button
-    //   const activeSection =
-    //     adminLinks.find((link) => pathname.startsWith(link.href))?.name ||
-    //     "campaigns";
-
-    //   const addLabel = `Add ${activeSection.charAt(0).toUpperCase() + activeSection.slice(1)}`;
 
     const activeLink =
         adminLinks.find((link) => pathname.startsWith(link.href)) ||
-        adminLinks.find((link) => link.name === "campaigns"); // fallback
+        adminLinks.find((link) => link.name === "campaigns");
 
     const addLabel = `Add ${activeLink!.name.charAt(0).toUpperCase() + activeLink!.name.slice(1)}`;
-
 
     return (
         <aside
@@ -59,12 +52,9 @@ export default function AdminSidebar() {
       "
         >
             <div className="h-full p-6 text-black flex flex-col justify-between">
-
-                {/* ✅ TOP SECTION */}
                 <div className="hidden lg:flex flex-col gap-6">
                     <h3 className="font-medium text-xl text-[#267282]">Admin Panel</h3>
 
-                    {/* ✅ NAV LINKS */}
                     <nav className="flex flex-col gap-3">
                         {adminLinks.map((link) => {
                             const Icon = link.icon;
@@ -81,63 +71,59 @@ export default function AdminSidebar() {
                                             ? "bg-[#267282] text-white"
                                             : "text-gray-700 hover:bg-black/5"}
                                         `}
-                                        >
+                                >
                                     <Icon className="w-4 h-4" />
                                     {link.name}
                                 </Link>
                             );
                         })}
 
-
-                        {/* ✅ VIEW MAIN SITE */}
                         <Link
                             href="/"
                             className="flex items-center gap-3 px-4 py-2 rounded-xl text-sm uppercase tracking-wide
                             text-gray-700 hover:bg-black/5 mt-4"
-                            >
+                        >
                             <ExternalLink className="w-4 h-4" />
                             View Main Site
                         </Link>
                     </nav>
                 </div>
 
-                {/* ✅ BOTTOM SECTION */}
                 <div className="flex flex-col gap-4">
-
-                    {/* ✅ DYNAMIC ADD BUTTON */}
-                    {/* <button
-                        onClick={() => alert(addLabel)}
-                        className="
-                            w-full py-3 rounded-xl bg-[#267282] text-white
-                            flex items-center justify-center gap-2 cursor-pointer
-                            hover:bg-[#267282]/90 transition-all duration-300
-                            "
-                        >
-                        <Plus className="w-4 h-4" />
-                        {addLabel}
-                    </button> */}
-
                     <button
-                        onClick={() => router.push(activeLink!.addHref)}
+                        onClick={() => {
+                            const modalTypes: Record<string, any> = {
+                                adformats: "addAdFormat",
+                                companies: "addCompany",
+                                campaigns: "addCampaign",
+                                industries: "addIndustry",
+                                effects: "addEffect",
+                                banners: "addBanner",
+                            };
+                            
+                            console.log('Button clicked!');
+                            console.log('Active section:', activeLink!.name);
+                            console.log('Modal type:', modalTypes[activeLink!.name]);
+                            
+                            openModal({ type: modalTypes[activeLink!.name] });
+                        }}
                         className="
                         w-full py-3 rounded-xl bg-[#267282] text-white
                         flex items-center justify-center gap-2 cursor-pointer
                         hover:bg-[#267282]/90 transition-all duration-300
                         "
-                        >
+                    >
                         <Plus className="w-4 h-4" />
                         {addLabel}
                     </button>
 
-
-                    {/* ✅ LOGGED-IN ADMIN */}
                     <div
                         onClick={() => setOpenLogout(true)}
                         className="
                         flex items-center gap-3 p-3 rounded-xl cursor-pointer
                         hover:bg-black/5 transition-all
                         "
-                        >
+                    >
                         <div className="w-10 h-10 rounded-full bg-gray-300 flex items-center justify-center">
                             <User className="w-5 h-5 text-gray-700" />
                         </div>
@@ -150,7 +136,6 @@ export default function AdminSidebar() {
                 </div>
             </div>
 
-            {/* ✅ LOGOUT MODAL */}
             {openLogout && (
                 <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
                     <div className="bg-white rounded-2xl p-6 w-[280px] text-center space-y-4">

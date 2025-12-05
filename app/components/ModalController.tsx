@@ -5,14 +5,17 @@ import Modal from "./Modal";
 import { useModal } from "./ModalProvider";
 import { Monitor, Smartphone } from "lucide-react";
 
+// Import modal components
+import AddAdFormatModal from "./modals/AddAdFormatModal";
+import AddCompanyModal from "./modals/AddCompanyModal";
+import AddCampaignModal from "./modals/AddCampaignModal";
+import AddIndustryModal from "./modals/AddIndustryModal";
+import AddEffectsModal from  "./modals/AddEffectsModal"
+
 export default function ModalController() {
   const { open, closeModal, options } = useModal();
-
-  // activeSize drives the Modal sizing when the incoming option is "both".
-  // It can be "monitor" or "mobile". Default to monitor.
   const [activeSize, setActiveSize] = useState<"monitor" | "mobile">("monitor");
 
-  // Sync activeSize whenever modal options change or modal opens.
   useEffect(() => {
     if (!open) return;
 
@@ -21,22 +24,37 @@ export default function ModalController() {
     } else if (options?.size === "monitor") {
       setActiveSize("monitor");
     } else if (options?.size === "both") {
-      // keep previous selection if it's monitor/mobile; otherwise default to monitor
       setActiveSize((prev) => (prev === "monitor" || prev === "mobile" ? prev : "monitor"));
     } else {
-      // default
       setActiveSize("monitor");
     }
   }, [open, options?.size]);
 
-  // If caller requested 'both' allow toggling between monitor/mobile.
-  // Otherwise use the provided size or default to monitor.
+  // Render form modals
+  if (options?.type === "addAdFormat") {
+    return open ? <AddAdFormatModal /> : null;
+  }
+
+  if (options?.type === "addCompany") {
+    return open ? <AddCompanyModal /> : null;
+  }
+
+  if (options?.type === "addCampaign") {
+    return open ? <AddCampaignModal /> : null;
+  }
+  if (options?.type === "addIndustry") {
+    return open ? < AddIndustryModal/>: null;
+  }
+  if (options?.type === "addEffect"){
+    return open ? < AddEffectsModal/>:null;
+  }
+
+  // For search/filter modal
   const modalSize =
     options?.size === "both" ? activeSize : (options?.size as "monitor" | "mobile" | undefined) ?? "monitor";
 
   return (
     <Modal open={open} onClose={closeModal} title="Search & Filters" size={modalSize}>
-      {/* Top-left toggle visible only when modal was opened with size: "both" */}
       {options?.size === "both" && (
         <div className="absolute top-6 left-6 z-50 flex items-center gap-2">
           <button
@@ -44,7 +62,9 @@ export default function ModalController() {
             aria-pressed={activeSize === "monitor"}
             onClick={() => setActiveSize("monitor")}
             className={`p-2 rounded-md transition-colors border border-black/20 cursor-pointer ${
-              activeSize === "monitor" ? "bg-black/50" : "bg-black/20 hover:bg-black/50 backdrop-blur-lg border bodrer-black/20 transition-all duration-300"
+              activeSize === "monitor"
+                ? "bg-black/50"
+                : "bg-black/20 hover:bg-black/50 backdrop-blur-lg border border-black/20 transition-all duration-300"
             }`}
             title="Monitor view"
           >
@@ -56,7 +76,9 @@ export default function ModalController() {
             aria-pressed={activeSize === "mobile"}
             onClick={() => setActiveSize("mobile")}
             className={`p-2 rounded-md transition-colors border border-black/20 cursor-pointer ${
-              activeSize === "mobile" ? "bg-black/50" : "bg-black/20 hover:bg-black/50 backdrop-blur-lg border bodrer-black/20 transition-all duration-300"
+              activeSize === "mobile"
+                ? "bg-black/50"
+                : "bg-black/20 hover:bg-black/50 backdrop-blur-lg border border-black/20 transition-all duration-300"
             }`}
             title="Mobile view"
           >
@@ -65,7 +87,6 @@ export default function ModalController() {
         </div>
       )}
 
-      {/* Put your search/filter UI here */}
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
         <div>
           <label className="block text-sm text-white/80 mb-2">Search</label>

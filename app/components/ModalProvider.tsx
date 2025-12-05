@@ -4,9 +4,19 @@ import React, { createContext, useContext, useState } from "react";
 
 type ModalSize = "monitor" | "mobile" | "both" | undefined;
 
+type ModalType = 
+  | "search"           // Your existing search/filter modal
+  | "addAdFormat"      // NEW
+  | "addCompany"       // NEW
+  | "addCampaign"      // NEW
+  | "addIndustry"      // NEW
+  | "addEffect"        // NEW
+  | "addBanner";       // NEW
+
 type ModalOptions = {
   size?: ModalSize;
-  // you can add more options here in future (e.g., initialData, title override, etc.)
+  type?: ModalType;
+  data?: any; // Optional: pass initial data to modal
 };
 
 type ModalContextValue = {
@@ -27,14 +37,19 @@ export function ModalProvider({ children }: { children: React.ReactNode }) {
     setOptions(opts);
     setOpen(true);
   };
+
   const closeModal = () => {
     setOpen(false);
-    // keep options until closed — clear if you prefer:
-    setOptions(undefined);
+    // Clear options after a short delay to allow exit animation
+    setTimeout(() => setOptions(undefined), 200);
   };
+
   const toggleModal = (opts?: ModalOptions) => {
-    setOptions(opts);
-    setOpen((s) => !s);
+    if (open) {
+      closeModal();
+    } else {
+      openModal(opts);
+    }
   };
 
   return (
