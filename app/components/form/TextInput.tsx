@@ -23,7 +23,7 @@ export default function TextInput({
 }: TextInputProps) {
   return (
     <div className="space-y-2">
-      <label htmlFor={name} className="block text-xm font-medium text-gray-700">
+      <label htmlFor={name} className="block text-xs font-medium text-gray-700">
         {label} 
       </label>
       <input
@@ -35,13 +35,13 @@ export default function TextInput({
         value={value}
         onChange={onChange}
         className={`
-          w-full px-4 py-2.5 bg-gray-50 border rounded
+          w-full px-4 py-2.5 bg-gray-50 border rounded 
           focus:outline-none focus:ring-1 focus:ring-[#267282] focus:border-transparent
-          text-gray-900 placeholder-gray-400 transition-all
+          text-gray-900 placeholder-gray-400 transition-all text-xs
           ${error ? "border-red-300 focus:ring-red-500" : "border-gray-200"}
         `}
       />
-      {error && <p className="text-xm text-red-600">{error}</p>}
+      {error && <p className="text-xs text-red-600">{error}</p>}
     </div>
   );
 }

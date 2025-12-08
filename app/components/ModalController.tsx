@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { useEffect, useState } from "react";
@@ -10,7 +11,8 @@ import AddAdFormatModal from "./modals/AddAdFormatModal";
 import AddCompanyModal from "./modals/AddCompanyModal";
 import AddCampaignModal from "./modals/AddCampaignModal";
 import AddIndustryModal from "./modals/AddIndustryModal";
-import AddEffectsModal from  "./modals/AddEffectsModal"
+import AddEffectModal from "./modals/AddEffectModal";
+import AddBannerModal from "./modals/AddBannerModal";
 
 export default function ModalController() {
   const { open, closeModal, options } = useModal();
@@ -42,11 +44,17 @@ export default function ModalController() {
   if (options?.type === "addCampaign") {
     return open ? <AddCampaignModal /> : null;
   }
+
   if (options?.type === "addIndustry") {
-    return open ? < AddIndustryModal/>: null;
+    return open ? <AddIndustryModal /> : null;
   }
-  if (options?.type === "addEffect"){
-    return open ? < AddEffectsModal/>:null;
+
+  if (options?.type === "addEffect") {
+    return open ? <AddEffectModal /> : null;
+  }
+
+  if (options?.type === "addBanner") {
+    return open ? <AddBannerModal /> : null;
   }
 
   // For search/filter modal

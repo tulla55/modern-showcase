@@ -1,3 +1,4 @@
+
 "use client";
 
 import { ChevronDown } from "lucide-react";
@@ -34,7 +35,7 @@ export default function SelectInput({
           value={value}
           onChange={onChange}
           className={`
-            w-full px-4 py-2.5 bg-gray-50 border rounded
+            w-full px-4 py-2 bg-gray-50 border rounded text-xs
             focus:outline-none focus:ring-1 focus:ring-[#267282] focus:border-transparent
             text-gray-900 transition-all
             appearance-none pr-10
